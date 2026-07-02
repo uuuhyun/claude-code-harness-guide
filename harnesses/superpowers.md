@@ -54,55 +54,19 @@ Superpowers는 코딩 에이전트를 위한 **하나의 개발 방법론**을 "
 
 ```mermaid
 flowchart LR
-    START(["💡 요구사항"])
-
-    subgraph PLAN["① 기획·설계"]
-        direction TB
-        BS["brainstorming<br/>요구사항·설계 정리"]
-        WP["writing-plans<br/>단계별 계획서"]
-        APPROVE{"승인?"}
-        BS --> WP --> APPROVE
-        APPROVE -->|수정| BS
-    end
-
-    subgraph DEV["② 구현·실행"]
-        direction TB
-        IMPL["구현<br/>(선택: using-git-worktrees로 격리)"]
-        TDD["test-driven-development"]
-        SDD["subagent-driven-development"]
-        DPA["dispatching-parallel-agents"]
-        BUG{"버그·실패?"}
-        DBG["systematic-debugging"]
-        IMPL --> TDD & SDD
-        SDD --> DPA
-        TDD --> BUG
-        DPA --> BUG
-        BUG -->|예| DBG --> IMPL
-    end
-
-    subgraph SHIP["③ 검증·리뷰·마무리"]
-        direction TB
-        VER["verification-before-completion"]
-        REQ["requesting-code-review"]
-        REC["receiving-code-review"]
-        PASS{"리뷰 통과?"}
-        FIN["finishing-a-development-branch<br/>머지/PR/정리"]
-        VER --> REQ --> REC --> PASS
-        PASS -->|통과| FIN
-    end
-
-    DONE(["✅ 완료"])
-
-    START --> BS
-    APPROVE -->|승인| IMPL
-    BUG -->|아니오| VER
-    PASS -->|수정| IMPL
-    FIN --> DONE
+    A(["💡 요구"]) --> B["brainstorming"] --> C["writing-plans"] --> D{"승인?"}
+    D -->|수정| B
+    D -->|승인| E["구현<br/>TDD · subagent · parallel"]
+    E --> F{"버그·실패?"}
+    F -->|예| G["systematic-debugging"] --> E
+    F -->|아니오| H["verification"] --> I["code-review<br/>request → receive"] --> J{"리뷰 통과?"}
+    J -->|수정| E
+    J -->|통과| K["finishing-branch"] --> L(["✅ 완료"])
 ```
 
-- 🔁 **되돌아오는 루프가 핵심**: 구현 중 버그가 나오면 `systematic-debugging`으로 원인을 잡고 구현으로 복귀하고, 리뷰에서 막히면 다시 구현으로 돌아간다. 직선이 아니라 반복 사이클이다.
-- ⏸ **승인 게이트**: `brainstorming`·`writing-plans`로 설계·계획을 확정한 뒤 **사용자 승인**을 받고서야 구현에 들어간다 (바로 코딩 방지).
-- 각 노드의 구체적 발동법은 아래 단계별 상세 참고.
+- **① 기획**: `brainstorming` → `writing-plans` → **승인** · **② 구현**: `구현`(TDD·subagent·parallel) → 버그 시 `systematic-debugging` · **③ 검증·마무리**: `verification` → `code-review` → `finishing-branch`
+- 🔁 **핵심은 루프**: 버그가 나오면 디버깅 후 구현으로 복귀, 리뷰에서 막히면 다시 구현으로. 직선이 아니라 반복 사이클이다.
+- 다이어그램은 개요라 일부 노드에 여러 스킬을 묶었다 (`구현`=TDD·subagent-driven·dispatching-parallel, `code-review`=requesting·receiving). 각 스킬의 정식 이름·발동법은 아래 단계별 상세 참고.
 
 ### ① 설계·계획 단계
 
