@@ -39,23 +39,42 @@ Superpowers는 코딩 에이전트를 위한 **하나의 개발 방법론**을 "
 
 > ⚠️ **핵심**: 훅이 자동으로 하는 일은 "스킬을 쓰라는 **지침 주입**"까지다. `brainstorming`·`TDD` 같은 **개별 스킬의 실제 실행은 에이전트(모델)의 판단**에 달려 있다. 그래서 조용히 발동되면 겉으로는 티가 안 나고, "자동인데 잘 안 느껴진다"는 인상을 준다. 확실히 쓰고 싶으면 `/superpowers:<skill>`로 직접 부르거나 아래처럼 말로 유도하면 된다.
 
-**프롬프트 예시**
+**대표 스킬별 발동 예시**
 
-```text
-# 1) 기능 설계를 브레인스토밍부터 — 바로 코드 짜지 말고 요구사항부터 캐물어줘
-brainstorming 스킬 써서 "외국인 로컬버디 매칭" 기능의 요구사항과 설계부터 같이 정리하자.
-```
+각 스킬은 두 가지 방법으로 부를 수 있다.
 
-```text
-# 2) 버그를 체계적으로 — 추측으로 고치지 말고 원인부터
-이 테스트가 간헐적으로 실패해. systematic-debugging 스킬대로 원인을 먼저 좁혀줘.
-```
+- **슬래시(`/`)** — `/superpowers:<skill>` 형태로 **명시 호출**. 가장 확실하다. 뒤에 맥락을 덧붙여도 된다 (예: `/superpowers:brainstorming HanBuddy 매칭 기능`).
+- **자연어** — 그냥 말로 유도. 단, 실제 발동은 모델 판단이라(위 경고 참고) 안 걸릴 수도 있다. 확실히 하려면 스킬 이름을 문장에 넣어 준다.
 
-```text
-# 3) "다 됐다"고 말하기 전에 실제 검증
-구현 끝났다고 하기 전에 verification-before-completion 스킬대로
-실제로 돌려서 통과하는지 근거를 보여줘.
-```
+아래는 개발 라이프사이클 단계별 대표 스킬이다. (전체 14개 중 실사용 빈도가 높은 것들만 추림.)
+
+**① 설계·계획 단계**
+
+| 스킬 | 슬래시 발동 | 자연어 발동 (예시) |
+|---|---|---|
+| `brainstorming` | `/superpowers:brainstorming` | "바로 코드 짜지 말고, HanBuddy 매칭 기능 요구사항·설계부터 같이 정리하자." |
+| `writing-plans` | `/superpowers:writing-plans` | "이 스펙으로 단계별 구현 계획서부터 작성해줘." |
+
+**② 구현·실행 단계**
+
+| 스킬 | 슬래시 발동 | 자연어 발동 (예시) |
+|---|---|---|
+| `test-driven-development` | `/superpowers:test-driven-development` | "이 기능, 실패하는 테스트부터 쓰고 TDD 레드-그린으로 구현해줘." |
+| `subagent-driven-development` | `/superpowers:subagent-driven-development` | "승인된 계획을 태스크별 서브에이전트로 나눠서 실행·검수하며 진행해줘." |
+| `dispatching-parallel-agents` | `/superpowers:dispatching-parallel-agents` | "서로 독립적인 이 3개 작업을 병렬 에이전트로 동시에 돌려줘." |
+| `systematic-debugging` | `/superpowers:systematic-debugging` | "추측으로 고치지 말고, 이 간헐적 실패의 원인부터 체계적으로 좁혀줘." |
+
+**③ 검증·리뷰·마무리 단계**
+
+| 스킬 | 슬래시 발동 | 자연어 발동 (예시) |
+|---|---|---|
+| `verification-before-completion` | `/superpowers:verification-before-completion` | "'다 됐다'고 하기 전에, 실제로 돌려서 통과하는지 근거를 보여줘." |
+| `requesting-code-review` | `/superpowers:requesting-code-review` | "머지 전에 이 변경분 코드리뷰 한 번 돌려줘." |
+| `receiving-code-review` | `/superpowers:receiving-code-review` | "받은 리뷰 지적들, 무비판 수용하지 말고 타당성부터 따져보고 반영해줘." |
+| `using-git-worktrees` | `/superpowers:using-git-worktrees` | "이 기능은 현재 작업과 격리해서 git worktree에서 진행하자." |
+| `finishing-a-development-branch` | `/superpowers:finishing-a-development-branch` | "구현·테스트 다 끝났어. 이 브랜치 마무리(머지/PR/정리) 방법 정리해줘." |
+
+> 💡 팁: 슬래시로 부르면 "이 스킬을 지금 쓴다"가 명확해 재현성이 높고, 자연어는 대화 흐름을 안 끊는 대신 발동이 모델 판단에 맡겨진다. 규율을 확실히 걸고 싶은 단계(디버깅·검증·리뷰)는 **슬래시**를 권장한다.
 
 ## 4. 언제 쓰나 / 언제 안 쓰나
 
