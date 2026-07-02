@@ -41,40 +41,64 @@ Superpowers는 코딩 에이전트를 위한 **하나의 개발 방법론**을 "
 
 **대표 스킬별 발동 예시**
 
-각 스킬은 두 가지 방법으로 부를 수 있다.
+각 스킬은 두 가지로 부른다.
 
-- **슬래시(`/`)** — `/superpowers:<skill>` 형태로 **명시 호출**. 가장 확실하다. 뒤에 맥락을 덧붙여도 된다 (예: `/superpowers:brainstorming HanBuddy 매칭 기능`).
-- **자연어** — 그냥 말로 유도. 단, 실제 발동은 모델 판단이라(위 경고 참고) 안 걸릴 수도 있다. 확실히 하려면 스킬 이름을 문장에 넣어 준다.
+- **슬래시(`/`)** — `/superpowers:<skill>` 로 **명시 호출**. 가장 확실하다. **명령 뒤에 바로 부연설명(맥락)을 이어 쓸 수 있고**, 그러면 그 문장이 스킬에 전달돼 곧장 그 맥락으로 작업을 시작한다.
+- **자연어** — 스킬 이름 없이 말로 유도. 흐름은 안 끊기지만 실제 발동은 모델 판단이라(위 경고 참고) 안 걸릴 수도 있다.
 
-아래는 개발 라이프사이클 단계별 대표 스킬이다. (전체 14개 중 실사용 빈도가 높은 것들만 추림.)
+아래는 라이프사이클 단계별 대표 스킬이다. (전체 14개 중 실사용 빈도가 높은 것만.) 예시는 어떤 프로젝트에도 대입되도록 일반적인 상황으로 적었다.
 
-**① 설계·계획 단계**
+### ① 설계·계획 단계
 
-| 스킬 | 슬래시 발동 | 자연어 발동 (예시) |
-|---|---|---|
-| `brainstorming` | `/superpowers:brainstorming` | "바로 코드 짜지 말고, HanBuddy 매칭 기능 요구사항·설계부터 같이 정리하자." |
-| `writing-plans` | `/superpowers:writing-plans` | "이 스펙으로 단계별 구현 계획서부터 작성해줘." |
+**`brainstorming`** — 만들기 전에 "무엇을 왜 만드는가"를 대화로 캐물어 스펙으로 정리한다. 바로 코드로 뛰어들지 않게 막는 단계.
+- **슬래시(+부연)**: `/superpowers:brainstorming 사용자 프로필 편집 기능을 만들려는데, 수정 가능한 필드 범위부터 같이 정하자`
+- **자연어**: "바로 코드 짜지 말고, 프로필 편집 기능 요구사항부터 같이 정리하자."
 
-**② 구현·실행 단계**
+**`writing-plans`** — 정해진 스펙을 받아, 코드 건드리기 전에 단계별 구현 계획서를 작성한다. 맥락 없는 주니어도 따라올 만큼 명확하게.
+- **슬래시(+부연)**: `/superpowers:writing-plans 방금 정한 프로필 편집 스펙으로, 파일 단위 작업까지 쪼갠 구현 계획서를 만들어줘`
+- **자연어**: "이 스펙으로 단계별 구현 계획서부터 작성해줘."
 
-| 스킬 | 슬래시 발동 | 자연어 발동 (예시) |
-|---|---|---|
-| `test-driven-development` | `/superpowers:test-driven-development` | "이 기능, 실패하는 테스트부터 쓰고 TDD 레드-그린으로 구현해줘." |
-| `subagent-driven-development` | `/superpowers:subagent-driven-development` | "승인된 계획을 태스크별 서브에이전트로 나눠서 실행·검수하며 진행해줘." |
-| `dispatching-parallel-agents` | `/superpowers:dispatching-parallel-agents` | "서로 독립적인 이 3개 작업을 병렬 에이전트로 동시에 돌려줘." |
-| `systematic-debugging` | `/superpowers:systematic-debugging` | "추측으로 고치지 말고, 이 간헐적 실패의 원인부터 체계적으로 좁혀줘." |
+### ② 구현·실행 단계
 
-**③ 검증·리뷰·마무리 단계**
+**`test-driven-development`** — 구현 코드보다 실패하는 테스트를 먼저 쓴다. 레드→그린→리팩터 사이클을 강제한다.
+- **슬래시(+부연)**: `/superpowers:test-driven-development 할인 쿠폰 계산 로직을, 엣지 케이스 테스트부터 빨간불로 만들고 통과시키는 순서로 짜줘`
+- **자연어**: "이 기능, 실패하는 테스트부터 쓰고 TDD로 구현해줘."
 
-| 스킬 | 슬래시 발동 | 자연어 발동 (예시) |
-|---|---|---|
-| `verification-before-completion` | `/superpowers:verification-before-completion` | "'다 됐다'고 하기 전에, 실제로 돌려서 통과하는지 근거를 보여줘." |
-| `requesting-code-review` | `/superpowers:requesting-code-review` | "머지 전에 이 변경분 코드리뷰 한 번 돌려줘." |
-| `receiving-code-review` | `/superpowers:receiving-code-review` | "받은 리뷰 지적들, 무비판 수용하지 말고 타당성부터 따져보고 반영해줘." |
-| `using-git-worktrees` | `/superpowers:using-git-worktrees` | "이 기능은 현재 작업과 격리해서 git worktree에서 진행하자." |
-| `finishing-a-development-branch` | `/superpowers:finishing-a-development-branch` | "구현·테스트 다 끝났어. 이 브랜치 마무리(머지/PR/정리) 방법 정리해줘." |
+**`subagent-driven-development`** — 승인된 계획을 태스크별로 서브에이전트에 맡겨 실행하고, 각 결과를 검수하며 다음으로 넘어간다 (현재 세션 안에서).
+- **슬래시(+부연)**: `/superpowers:subagent-driven-development 위 계획서의 태스크들을 하나씩 서브에이전트로 실행하고, 단계마다 검수 결과를 보여줘`
+- **자연어**: "승인된 계획을 태스크별 서브에이전트로 나눠서 실행·검수하며 진행해줘."
 
-> 💡 팁: 슬래시로 부르면 "이 스킬을 지금 쓴다"가 명확해 재현성이 높고, 자연어는 대화 흐름을 안 끊는 대신 발동이 모델 판단에 맡겨진다. 규율을 확실히 걸고 싶은 단계(디버깅·검증·리뷰)는 **슬래시**를 권장한다.
+**`dispatching-parallel-agents`** — 서로 의존이 없는 독립 작업 2개 이상을 동시에 병렬로 실행한다.
+- **슬래시(+부연)**: `/superpowers:dispatching-parallel-agents 문서 번역·로그 정리·의존성 업데이트 이 3개는 서로 독립적이니 병렬로 동시에 돌려줘`
+- **자연어**: "서로 독립적인 이 3개 작업을 병렬 에이전트로 동시에 돌려줘."
+
+**`systematic-debugging`** — 버그·테스트 실패·이상 동작을 만나면, 추측 수정 대신 재현→가설→원인 격리 순으로 체계적으로 파고든다.
+- **슬래시(+부연)**: `/superpowers:systematic-debugging 로그인 세션이 간헐적으로 만료되는 버그야. 추측으로 고치지 말고 재현 조건부터 좁혀줘`
+- **자연어**: "추측으로 고치지 말고, 이 간헐적 실패의 원인부터 체계적으로 좁혀줘."
+
+### ③ 검증·리뷰·마무리 단계
+
+**`verification-before-completion`** — "완료/통과/고침"이라 말하기 전에 실제로 실행해 근거를 확인한다. 주장보다 증거가 먼저.
+- **슬래시(+부연)**: `/superpowers:verification-before-completion 결제 취소 기능 다 됐다고 하기 전에, 실제로 취소 플로우를 돌려서 통과 로그를 보여줘`
+- **자연어**: "'다 됐다'고 하기 전에, 실제로 돌려서 통과하는지 근거를 보여줘."
+
+**`requesting-code-review`** — 작업/기능을 끝냈거나 머지 전에, 요구사항을 실제로 충족하는지 리뷰를 요청한다.
+- **슬래시(+부연)**: `/superpowers:requesting-code-review 이번 브랜치 변경분이 원래 요구사항을 다 만족하는지 머지 전에 리뷰해줘`
+- **자연어**: "머지 전에 이 변경분 코드리뷰 한 번 돌려줘."
+
+**`receiving-code-review`** — 받은 리뷰 지적을 무비판 수용하지 않고, 타당한지 기술적으로 검증한 뒤 반영한다.
+- **슬래시(+부연)**: `/superpowers:receiving-code-review 리뷰어가 이 부분 캐싱하라는데, 정말 필요한지 근거부터 따져보고 맞으면 반영해줘`
+- **자연어**: "받은 리뷰 지적들, 무비판 수용하지 말고 타당성부터 따져보고 반영해줘."
+
+**`using-git-worktrees`** — 현재 작업 공간을 건드리지 않도록, 격리된 git worktree에서 기능 작업을 진행한다.
+- **슬래시(+부연)**: `/superpowers:using-git-worktrees 실험적인 리팩터라 현재 브랜치와 격리하고 싶어. worktree 새로 만들어 거기서 하자`
+- **자연어**: "이 기능은 현재 작업과 격리해서 git worktree에서 진행하자."
+
+**`finishing-a-development-branch`** — 구현·테스트가 끝난 브랜치를 두고 머지/PR/정리 중 무엇을 할지 정리해 마무리한다.
+- **슬래시(+부연)**: `/superpowers:finishing-a-development-branch 구현·테스트 다 끝났어. 이 브랜치를 머지할지 PR 낼지 옵션 정리해줘`
+- **자연어**: "구현·테스트 다 끝났어. 이 브랜치 마무리(머지/PR/정리) 방법 정리해줘."
+
+> 💡 팁: 슬래시로 부르면 "이 스킬을 지금 쓴다"가 명확해 재현성이 높고, **명령 뒤에 부연설명까지 붙이면** 스킬 발동과 맥락 전달이 한 번에 된다. 규율을 확실히 걸고 싶은 단계(디버깅·검증·리뷰)는 **슬래시**를 권장한다.
 
 ## 4. 언제 쓰나 / 언제 안 쓰나
 
