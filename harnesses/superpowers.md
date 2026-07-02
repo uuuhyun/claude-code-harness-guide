@@ -53,42 +53,51 @@ Superpowers는 코딩 에이전트를 위한 **하나의 개발 방법론**을 "
 "요구 → 설계 → 계획 → 승인 → 구현 → 검증 → 리뷰 → 마무리"라는 일반적인 개발 사이클에 각 스킬이 어디서 발동되는지를 나타낸 흐름도다.
 
 ```mermaid
-flowchart TD
-    START(["💡 아이디어 / 요구사항"])
+flowchart LR
+    START(["💡 요구사항"])
+
     subgraph PLAN["① 기획·설계"]
-        BS["brainstorming<br/>무엇을·왜 · 요구사항/설계 정리"]
-        WP["writing-plans<br/>단계별 구현 계획서"]
-        APPROVE{"사용자 승인?"}
+        direction TB
+        BS["brainstorming<br/>요구사항·설계 정리"]
+        WP["writing-plans<br/>단계별 계획서"]
+        APPROVE{"승인?"}
+        BS --> WP --> APPROVE
+        APPROVE -->|수정| BS
     end
+
     subgraph DEV["② 구현·실행"]
-        WT["using-git-worktrees<br/>(선택) 격리 작업공간"]
-        IMPL["구현"]
-        TDD["test-driven-development<br/>실패 테스트 먼저"]
-        SDD["subagent-driven-development<br/>태스크별 실행·검수"]
-        DPA["dispatching-parallel-agents<br/>독립 작업 병렬"]
-        BUG{"버그 · 실패?"}
-        DBG["systematic-debugging<br/>원인 격리"]
+        direction TB
+        IMPL["구현<br/>(선택: using-git-worktrees로 격리)"]
+        TDD["test-driven-development"]
+        SDD["subagent-driven-development"]
+        DPA["dispatching-parallel-agents"]
+        BUG{"버그·실패?"}
+        DBG["systematic-debugging"]
+        IMPL --> TDD & SDD
+        SDD --> DPA
+        TDD --> BUG
+        DPA --> BUG
+        BUG -->|예| DBG --> IMPL
     end
+
     subgraph SHIP["③ 검증·리뷰·마무리"]
-        VER["verification-before-completion<br/>실제 실행 · 근거 확인"]
-        REQ["requesting-code-review<br/>리뷰 요청"]
-        REC["receiving-code-review<br/>타당성 검증 후 반영"]
+        direction TB
+        VER["verification-before-completion"]
+        REQ["requesting-code-review"]
+        REC["receiving-code-review"]
         PASS{"리뷰 통과?"}
-        FIN["finishing-a-development-branch<br/>머지 / PR / 정리"]
+        FIN["finishing-a-development-branch<br/>머지/PR/정리"]
+        VER --> REQ --> REC --> PASS
+        PASS -->|통과| FIN
     end
+
     DONE(["✅ 완료"])
 
-    START --> BS --> WP --> APPROVE
-    APPROVE -->|"수정"| BS
-    APPROVE -->|"승인"| WT --> IMPL
-    IMPL --> TDD & SDD
-    SDD --> DPA
-    TDD --> BUG
-    DPA --> BUG
-    BUG -->|"예"| DBG --> IMPL
-    BUG -->|"아니오"| VER --> REQ --> REC --> PASS
-    PASS -->|"수정"| IMPL
-    PASS -->|"통과"| FIN --> DONE
+    START --> BS
+    APPROVE -->|승인| IMPL
+    BUG -->|아니오| VER
+    PASS -->|수정| IMPL
+    FIN --> DONE
 ```
 
 - 🔁 **되돌아오는 루프가 핵심**: 구현 중 버그가 나오면 `systematic-debugging`으로 원인을 잡고 구현으로 복귀하고, 리뷰에서 막히면 다시 구현으로 돌아간다. 직선이 아니라 반복 사이클이다.
